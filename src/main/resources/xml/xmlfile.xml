@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="localhost" modified="2021-01-21T09:42:53.876Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36" etag="9k7izIvScFe5Qt1nsWhC" version="14.2.2">
+    <diagram id="LwESp2YAfMpRNFdupn99" name="Page-1">
+        <mxGraphModel dx="768" dy="366" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0" />
+                <mxCell id="1" parent="0" />
+                <mxCell id="rU56yPkJ2gQ65oRiELbk-1" value="Infrastructure&#xa;System" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[1,1,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];rounded=1;absoluteArcSize=1;arcSize=2;html=1;strokeColor=none;gradientColor=none;shadow=0;dashed=0;fontSize=12;fontColor=#9E9E9E;align=left;verticalAlign=top;spacing=10;spacingTop=-4;fillColor=#F3E5F5;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="40" width="480" height="260" as="geometry" />
+                </mxCell>
+                <object label="Compute&#xa;Engine" Name="cloud-ui-poc-02" Zone="us-central1-a" Machine_Type="n1.standard-1" Allow_Update="true" Source="google_comput" Tags="WEB" Subnetwork="google_comput" id="rU56yPkJ2gQ65oRiELbk-2">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=compute_engine" vertex="1" parent="1">
+                        <mxGeometry x="190" y="80" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+                <mxCell id="rU56yPkJ2gQ65oRiELbk-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.465;entryY=0.644;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rU56yPkJ2gQ65oRiELbk-3" target="rU56yPkJ2gQ65oRiELbk-2">
+                    <mxGeometry relative="1" as="geometry" />
+                </mxCell>
+                <object label="Persistent&#xa;Disk" Type="Persistant Disk" Family="rhel-7" Project="rhel-cloud" Image="data.google." Name="cloud-ui-poc-vo" Size="60" Disk_Type="pd-ssd" Zone="us-central1-a" id="rU56yPkJ2gQ65oRiELbk-3">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=persistent_disk" vertex="1" parent="1">
+                        <mxGeometry x="270" y="200" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+                <mxCell id="rU56yPkJ2gQ65oRiELbk-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.424;entryY=0.484;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rU56yPkJ2gQ65oRiELbk-4" target="rU56yPkJ2gQ65oRiELbk-2">
+                    <mxGeometry relative="1" as="geometry" />
+                </mxCell>
+                <object label="Cloud IAM" Type="Service_Account" Display_Name="POC Service Ac" Account_Id="cloud-ui-poc01" id="rU56yPkJ2gQ65oRiELbk-4">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=cloud_iam" vertex="1" parent="1">
+                        <mxGeometry x="359" y="60" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+                <mxCell id="rU56yPkJ2gQ65oRiELbk-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.431;entryY=1.014;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rU56yPkJ2gQ65oRiELbk-8" target="rU56yPkJ2gQ65oRiELbk-1">
+                    <mxGeometry relative="1" as="geometry" />
+                </mxCell>
+                <object label="Cloud&#xa;Firewall Rules" Type="VPC_Firewll_Rules" Name="cloud-ui-firewall" Ports="80,8000,1000,20" Protocol="icmp" Network="google_compute" Source_Tag="web" id="rU56yPkJ2gQ65oRiELbk-8">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=cloud_firewall_rules" vertex="1" parent="1">
+                        <mxGeometry x="280" y="370" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+                <object label="Virtual&#xa;Private Cloud" Name="cloud-ui-poc-01" Auto_Create_Subnetwork="false" id="rU56yPkJ2gQ65oRiELbk-10">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=virtual_private_cloud" vertex="1" parent="1">
+                        <mxGeometry x="490" y="141.5" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+                <object label="Cloud&#xa;Network" IP_CIDR_Range="10.2.0.0/16" Region="us-central1" Name="cloud-ui-poc-01" id="rU56yPkJ2gQ65oRiELbk-11">
+                    <mxCell style="html=1;fillColor=#5184F3;strokeColor=none;verticalAlign=top;labelPosition=center;verticalLabelPosition=bottom;align=center;spacingTop=-6;fontSize=11;fontStyle=1;fontColor=#999999;shape=mxgraph.gcp2.hexIcon;prIcon=cloud_network" vertex="1" parent="1">
+                        <mxGeometry x="430" y="270" width="66" height="58.5" as="geometry" />
+                    </mxCell>
+                </object>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
