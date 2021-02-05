@@ -24,6 +24,7 @@ public class ComputeVMBuilder {
     private String[] scopes;
     private Mig mig;
     private DBInstance dbInstance;
+    private LoadBalancing loadBalancing;
 
     public ComputeVMBuilder setSource(String source) {
         this.source = source;
@@ -129,8 +130,14 @@ public class ComputeVMBuilder {
         return this;
     }
 
+    public ComputeVMBuilder withLoadBalancing(LoadBalancing loadBalancing){
+        this.loadBalancing = loadBalancing;
+        return this;
+    }
+
     public ComputeVM createComputeVM() {
         return new ComputeVM(name, zone, machine_type, source, networkInt, email, scopes, allow_stopping_for_update, tags,
-                cloudDns, bootDisk, serviceAccount, networkInterface, firewall, persistentDisk, subNetwork, provider, mig, dbInstance);
+                cloudDns, bootDisk, serviceAccount, networkInterface, firewall, persistentDisk, subNetwork, provider,
+                mig, dbInstance, loadBalancing);
     }
 }

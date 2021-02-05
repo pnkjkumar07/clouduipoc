@@ -29,7 +29,10 @@ import com.google.gson.JsonParser;
 
 import static com.google.gson.stream.JsonReader.*;
 
-@Controller
+//@CrossOrigin(origins = "http://localhost:8080/")
+//@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@RestController
 public class ComponentController {
 
     private String fileName;
@@ -84,6 +87,7 @@ public class ComponentController {
         return new ResponseEntity<>(loadJson(fileName), HttpStatus.OK);
     }
 
+
     @PostMapping(value = "/readxml",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = "text/plain"
@@ -92,7 +96,8 @@ public class ComponentController {
             throws ConfigDataResourceNotFoundException {
 
         System.out.println("Got xmldata from browser :- "+ xmldata);
-        String outputFilePath = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\xmlfile.xml"; //path of xml file where we are trying to write POST request data from UI
+        String outputFilePath = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\xmlfile.xml"; //pankaj
+        //String outputFilePath = "D:\\XML_CloudUI"; //prarthana
 
         String tfcontent = null;
         tfcontent = storeXML(xmldata, tfcontent, outputFilePath);

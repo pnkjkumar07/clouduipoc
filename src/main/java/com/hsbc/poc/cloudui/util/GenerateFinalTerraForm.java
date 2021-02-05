@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public class GenerateFinalTerraForm {
 
-    private static String filePath = "C:\\develpment\\hsbc\\git\\uicloudtf\\demo\\scenario_02";
+    private static String filePath = "C:\\develpment\\hsbc\\git\\HiteshUIRepo\\demo\\scenario_02\\";
 
     public static void writeToTempFile(String fileName, Object computeVM) throws Exception{
 
@@ -19,6 +19,7 @@ public class GenerateFinalTerraForm {
         oos.writeObject(computeVM);
         oos.close();
         fout.close();
+        System.out.println("Writting tf file path:- "+filePath+fileName);
         System.out.println(computeVM);
 
     }
@@ -68,6 +69,7 @@ public class GenerateFinalTerraForm {
         writeToTempFile("main.tf",computeVM.toString());
     }*/
 
+    //for 6 components
     public static String createMainTF1(ComputeVM compute, BootDisk bootDisk, PersistentDisk persistentDisk, ServiceAccount serviceAccount,
                                       Firewall firewall, NetworkInterface networkInterface, SubNetwork subNetwork) throws Exception {
         System.out.println("Generating main tf file");
@@ -122,6 +124,62 @@ public class GenerateFinalTerraForm {
 
         return computeVM.toString();
        // writeToTempFile("main.tf",computeVM.toString());
+    }
+
+    public static String createMainTF11(ComputeVM compute, BootDisk bootDisk, PersistentDisk persistentDisk, ServiceAccount serviceAccount,
+                                       Firewall firewall, NetworkInterface networkInterface, SubNetwork subNetwork, Mig mig,
+                                        CloudDns cloudDns, DBInstance dbInstance,LoadBalancing loadBalancing) throws Exception {
+        System.out.println("Generating main tf file");
+
+        String[] scopes = {"\"cloud-platform\""};
+        String mig_scopes = "storage-rw";
+        String mig_tags = "sample";
+        String rrdatas = "8.8.8.8";
+        final ComputeVM computeVM = new ComputeVMBuilder().setName(compute.getName()).setZone(compute.getZone())
+                .setMachine_type(compute.getMachine_type()).setSource(compute.getSource())
+                .setNetworkInt(compute.getNetworkInt())
+                .setAllow_stopping_for_update(compute.getAllow_stopping_for_update()).setEmail(compute.getEmail()).setScopes(scopes)
+                .withBootDisk(new BootDiskBuilder().setSource(compute.getSource()).createBootDisk())
+                .withServiceAccount(new ServiceAccountBuilder().setAccount_id(serviceAccount.getAccountID()).setDisplayName(serviceAccount.getDisplayName()).createServiceAccount())
+                .withNetworkInterface(new NetworkInterfaceBuilder().setName(networkInterface.getName()).createNetworkInterface())
+                .withSubNetwork(new SubNetworkBuilder().setName(subNetwork.getName()).setIp_cidr_range(subNetwork.getIp_cidr_range())
+                        .setRegion(subNetwork.getRegion()).createSubNetwork())
+                .withFireWall(new FirewallBuilder().setName(firewall.getName()).setNetwork(firewall.getNetwork())
+                        .setProtocol(firewall.getProtocol()).setPorts(firewall.getPorts()).setSource_tags(firewall.getSource_tags()).createFireWall())
+                .withPersistentDisk(new PersistentDiskBuilder().setFamily(persistentDisk.getFamily()).setProject(persistentDisk.getProject()).
+                        setName(persistentDisk.getName()).setSize(persistentDisk.getSize()).setType(persistentDisk.getType())
+                        .setImage(persistentDisk.getImage()).setZone(persistentDisk.getZone()).createPersistentDisk())
+                //4components
+                .withMig(new MigBuilder().setName_prefix(mig.getName_prefix()).setMachine_type(mig.getMachine_type()).setTags(mig.getTags())
+                        .setAutomatic_restart("true").setOn_host_maintenance("MIGRATE").setSubnetwork("google_compute_subnetwork.cloud_ui_poc_subnetwork.self_link")
+                        .setSource("google_compute_disk.t-compute-disk.name").setAuto_delete("true").setBoot("true").setEmail("google_service_account.src_acc_poc.email")
+                        .setScopes(mig_scopes).setCreate_before_destroy("true").setMig_name("substr(\"my-mig-${md5(google_compute_instance_template.template.name)}\", 0, 63)")
+                        .setRegion("us-central1").setBase_instance_name("mig-instance").setTarget_size("1").setWait_for_instances("true")
+                        //.setDistribution_policy_zones(mig_distribution_policy_zones)
+                        .setVersion_name("appserver").setInstance_template("google_compute_instance_template.template.self_link")
+                        .setCreate_before_destroy("true")
+                        .createMig())
+                .withCloudDns(new CloudDnsBuilder().setManaged_name(cloudDns.getManaged_name()).setManaged_dns_name(cloudDns.getManaged_dns_name())
+                        .setManaged_zone("google_dns_managed_zone.example.name").setName("www.${google_dns_managed_zone.example.dns_name}")
+                        .setType(cloudDns.getType()).setRrdatas(rrdatas).setTtl(cloudDns.getTtl()).createCloudDns())
+                .withDBInstance(new DBInstanceBuilder().setDbinstancename(dbInstance.getDbinstancename()).setDbversion(dbInstance.getDbversion())
+                        .setTier(dbInstance.getTier()).setDeletion_protection("false").setSqldbname("user").setSqldbinstance("google_sql_database_instance.db_instance.name")
+                        .setPasswordlength("16").setPasswordspecial("true").setPasswordoverridespecial("_%@").setSqlusername("cloud_ui_user")
+                        .setSqluserinstance("google_sql_database_instance.db_instance.name").setSqluserhost("*").setSqluserpassword("random_password.password.result")
+                        .createDBInstance())
+                .withLoadBalancing(new LoadBalancingBuilder().setRuleName(loadBalancing.getRuleName()).setRuleRegion(loadBalancing.getRuleRegion())
+                        .setRuleportrange(loadBalancing.getRuleportrange()).setServicename(loadBalancing.getServicename()).setServiceregion(loadBalancing.getServiceregion())
+                        .setServiceloadbalancingscheme(loadBalancing.getServiceloadbalancingscheme()).setHealthcheckname(loadBalancing.getHealthcheckname())
+                        .setHealthcheckintervalsec(loadBalancing.getHealthcheckintervalsec()).setHealthchecktimeoutsec(loadBalancing.getHealthchecktimeoutsec())
+                        .setHealthcheckregion(loadBalancing.getHealthcheckregion())
+                        .createLoadBalancing())
+
+                .createComputeVM();
+
+        //writting main.tf file
+        writeToTempFile("main.tf",computeVM.toString());
+
+        return computeVM.toString();
     }
 }
 

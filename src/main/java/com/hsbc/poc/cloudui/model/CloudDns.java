@@ -12,16 +12,22 @@ public class CloudDns implements Serializable {
     private String name;
     private String managed_zone;
     private String type;
-    private String[] rrdatas;
+    private String rrdatas;
     private String ttl;
 
-    public CloudDns(String managed_name, String managed_dns_name, String name, String managed_zone, String type, String rrdatas[], String ttl) {
+    public CloudDns(String managed_name, String managed_dns_name, String name, String managed_zone, String type, String rrdatas, String ttl) {
         this.managed_name = managed_name;
         this.managed_dns_name = managed_dns_name;
         this.name = name;
         this.managed_zone = managed_zone;
         this.type = type;
         this.rrdatas = rrdatas;
+        this.ttl = ttl;
+    }
+    public CloudDns(String managed_name, String managed_dns_name, String type, String ttl){
+        this.managed_name = managed_name;
+        this.managed_dns_name = managed_dns_name;
+        this.type = type;
         this.ttl = ttl;
     }
 
@@ -35,7 +41,7 @@ public class CloudDns implements Serializable {
                 "\r\n managed_zone =" + managed_zone  +
                 "\r\n name = \"" + name + "\"" +
                 "\r\n type = \"" + type + "\"" +
-                "\r\n rrdatas = " + Arrays.toString(rrdatas) +
+                "\r\n rrdatas = [\"" + rrdatas + "\"]" +
                 "\r\n ttl = " + ttl +
                 "\r\n}";
     }
@@ -80,11 +86,11 @@ public class CloudDns implements Serializable {
         this.type = type;
     }
 
-    public String[] getRrdatas() {
+    public String getRrdatas() {
         return rrdatas;
     }
 
-    public void setRrdatas(String[] rrdatas) {
+    public void setRrdatas(String rrdatas) {
         this.rrdatas = rrdatas;
     }
 

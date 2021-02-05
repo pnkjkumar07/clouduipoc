@@ -5,7 +5,7 @@ import com.hsbc.poc.cloudui.model.Mig;
 public class MigBuilder {
     private String name_prefix;
     private String machine_type;
-    private String[] tags;
+    private String tags;
     private String automatic_restart;
     private String on_host_maintenance;
     private String subnetwork;
@@ -13,7 +13,7 @@ public class MigBuilder {
     private String auto_delete;
     private String boot;
     private String email;
-    private String[] scopes;
+    private String scopes;
     private String create_before_destroy;
     private String mig_name;
     private String region;
@@ -34,7 +34,7 @@ public class MigBuilder {
         return this;
     }
 
-    public MigBuilder setTags(String[] tags) {
+    public MigBuilder setTags(String tags) {
         this.tags = tags;
         return this;
     }
@@ -74,7 +74,7 @@ public class MigBuilder {
         return this;
     }
 
-    public MigBuilder setScopes(String[] scopes) {
+    public MigBuilder setScopes(String scopes) {
         this.scopes = scopes;
         return this;
     }

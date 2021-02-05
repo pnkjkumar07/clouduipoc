@@ -8,7 +8,7 @@ public class Mig implements Serializable {
     private static final long serialVersionUID = -299482035708790404L;
     private String name_prefix;
     private String machine_type;
-    private String[] tags;
+    private String tags;
     private String automatic_restart;
     private String on_host_maintenance;
     private String subnetwork;
@@ -16,7 +16,7 @@ public class Mig implements Serializable {
     private String auto_delete;
     private String boot;
     private String email;
-    private String[] scopes;
+    private String scopes;
     private String create_before_destroy;
     private String mig_name;
     private String region;
@@ -27,7 +27,7 @@ public class Mig implements Serializable {
     private String version_name;
     private String instance_template;
 
-    public Mig(String name_prefix, String machine_type, String[] tags, String automatic_restart, String on_host_maintenance, String subnetwork, String source, String auto_delete, String boot, String email, String[] scopes, String create_before_destroy, String mig_name, String region, String base_instance_name, String target_size, String wait_for_instances, String[] distribution_policy_zones, String version_name, String instance_template) {
+    public Mig(String name_prefix, String machine_type, String tags, String automatic_restart, String on_host_maintenance, String subnetwork, String source, String auto_delete, String boot, String email, String scopes, String create_before_destroy, String mig_name, String region, String base_instance_name, String target_size, String wait_for_instances, String[] distribution_policy_zones, String version_name, String instance_template) {
         this.name_prefix = name_prefix;
         this.machine_type = machine_type;
         this.tags = tags;
@@ -50,6 +50,11 @@ public class Mig implements Serializable {
         this.instance_template = instance_template;
     }
 
+    public Mig(String name_prefix, String machine_type, String tags){
+        this.name_prefix = name_prefix;
+        this.machine_type = machine_type;
+        this.tags = tags;
+    }
     public String getName_prefix() {
         return name_prefix;
     }
@@ -66,11 +71,11 @@ public class Mig implements Serializable {
         this.machine_type = machine_type;
     }
 
-    public String[] getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 
@@ -130,11 +135,11 @@ public class Mig implements Serializable {
         this.email = email;
     }
 
-    public String[] getScopes() {
+    public String getScopes() {
         return scopes;
     }
 
-    public void setScopes(String[] scopes) {
+    public void setScopes(String scopes) {
         this.scopes = scopes;
     }
 
@@ -216,7 +221,7 @@ public class Mig implements Serializable {
                 "\r\n resource \"google_compute_instance_template\" \"template\"  {" +
                 "\r\n name_prefix = \"" + name_prefix + "\"" +
                 "\r\n machine_type = \"" + machine_type + "\"" +
-                "\r\n tags = " + Arrays.toString(tags) +
+                "\r\n tags = [\"" + tags + "\"]" +
                 "\r\n scheduling {" +
                 "\r\n automatic_restart =  "+ automatic_restart +
                 "\r\n on_host_maintenance=\"" + on_host_maintenance + "\" \r\n }" +
@@ -225,9 +230,9 @@ public class Mig implements Serializable {
                 "\r\n auto_delete = " + auto_delete +
                 "\r\n boot = " + boot + "\r\n }"+
                 "\r\n service_account { \r\n email = " + email +
-                "\r\n scopes=" + Arrays.toString(scopes) + "\r\n }"+
+                "\r\n scopes = [\"" + scopes + "\"] \r\n }"+
                 "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n } \r\n  }" +
-                "\r\n resource \"google_compute_region_instance_group_manager\" \"cloud_ui_poc_mig\" { " +
+                /*"\r\n resource \"google_compute_region_instance_group_manager\" \"cloud_ui_poc_mig\" { " +
                 "\r\n name = " + mig_name +
                 "\r\n region = \"" + region + "\"" +
                 "\r\n base_instance_name = \"" + base_instance_name + "\"" +
@@ -237,7 +242,7 @@ public class Mig implements Serializable {
                 "\r\n version { " +
                 "\r\n name = \"" + version_name + "\"" +
                 "\r\n instance_template = " + instance_template + "\r\n }" +
-                "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n }" +
+                "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n }" +*/
                 "\r\n }";
     }
 }

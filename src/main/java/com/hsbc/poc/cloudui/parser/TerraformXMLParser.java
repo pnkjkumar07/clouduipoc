@@ -29,10 +29,30 @@ public class TerraformXMLParser {
     private static ServiceAccount serviceAccount = null;
     private static SubNetwork subNetwork = null;
     private static NetworkInterface networkInterface = null;
+    private static Mig mig = null;
+    private static CloudDns cloudDns;
+    private static DBInstance dbInstance;
+    private static LoadBalancing loadBalancing;
+
+    //load balancing
+    private static String ruleName = null;
+    private static String ruleRegion = null;
+    private static String ruleportrange = null;
+    private static String rulebackendservice = null;
+    private static String servicename = null;
+    private static String serviceregion = null;
+    private static String serviceloadbalancingscheme = null;
+    private static String servicehealthchecks = null;
+    private static String healthcheckname = null;
+    private static String healthcheckintervalsec = null;
+    private static String healthchecktimeoutsec = null;
+    private static String healthcheckregion = null;
+
 
     public static void main(String[] args) throws Exception {
 
-        String xmlfilename = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\TerraformComponent.xml";
+        //String xmlfilename = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\TerraformComponent.xml";
+        String xmlfilename = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\terraform_15.xml";
 
         parseGenerateTF(xmlfilename);
     }
@@ -65,7 +85,7 @@ public class TerraformXMLParser {
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
                 String elementName = eElement.getAttribute("label");
-
+                //System.out.println("Elements name:- "+elementName);
                 if(elementName.equalsIgnoreCase("Compute\n" +
                         "Engine")){
                     String computeEngineName = eElement.getAttribute("Name");
@@ -119,14 +139,60 @@ public class TerraformXMLParser {
                     String region = eElement.getAttribute("Region");
                     subNetwork = new SubNetwork(name, range, region);
                 }
-                if(elementName.equalsIgnoreCase("Virtual\n" +
-                        "Private Cloud")){
+                if(elementName.equalsIgnoreCase("VPC")){
                     networkInterface = new NetworkInterface(eElement.getAttribute("Name"));
                 }
+
+                if(elementName.equalsIgnoreCase("Managed Instance Group")){
+                    String nameprefix = eElement.getAttribute("Name_prefix");
+                    String machineType = eElement.getAttribute("Machine_Type");
+                    String tags = eElement.getAttribute("Tags");
+                    mig = new Mig(nameprefix, machineType, tags);
+                }
+                if(elementName.equalsIgnoreCase("Cloud\n" +
+                        "DNS")){
+                    String managedname = eElement.getAttribute("name");
+                    String dnsname = eElement.getAttribute("dns_name");
+                    String type = eElement.getAttribute("type");
+                    String ttl = eElement.getAttribute("TTL");
+                    cloudDns = new CloudDns(managedname, dnsname, type, ttl);
+                }
+                if(elementName.equalsIgnoreCase("Cloud SQL")){
+                    String dbname = eElement.getAttribute("name");
+                    String dbversion = eElement.getAttribute("database_version");
+                    String tier = eElement.getAttribute("tier");
+                    dbInstance = new DBInstance(dbname, dbversion, tier);
+                }
+
+                if(elementName.equalsIgnoreCase("Forwarding Rule")){
+                    ruleName = eElement.getAttribute("name");;
+                    ruleRegion = eElement.getAttribute("region");
+                    ruleportrange = eElement.getAttribute("port_range");
+                    rulebackendservice = eElement.getAttribute("backend_service");
+                }
+                if(elementName.equalsIgnoreCase("Backend Service")){
+                    servicename = eElement.getAttribute("name");;
+                    serviceregion = eElement.getAttribute("region");
+                    serviceloadbalancingscheme = eElement.getAttribute("oad_balancing_scheme");
+                    servicehealthchecks = eElement.getAttribute("health_checks");
+                }
+                if(elementName.equalsIgnoreCase("Health Check")){
+                    healthcheckname = eElement.getAttribute("name");
+                    healthcheckintervalsec = eElement.getAttribute("check_interval_sec");
+                    healthchecktimeoutsec = eElement.getAttribute("timeout_sec");
+                    healthcheckregion = eElement.getAttribute("region");
+                }
+                loadBalancing = new LoadBalancing(ruleName, ruleRegion, ruleportrange, rulebackendservice, servicename,
+                        serviceregion, serviceloadbalancingscheme, servicehealthchecks, healthcheckname,
+                        healthcheckintervalsec, healthchecktimeoutsec, healthcheckregion);
             }
         }
+        //for 6 components
+        /*return  GenerateFinalTerraForm.createMainTF1(computeVM, bootDisk, persistentDisk, serviceAccount, firewall,
+                networkInterface, subNetwork);*/
 
-        return  GenerateFinalTerraForm.createMainTF1(computeVM, bootDisk, persistentDisk, serviceAccount, firewall,
-                networkInterface, subNetwork);
+        return  GenerateFinalTerraForm.createMainTF11(computeVM, bootDisk, persistentDisk, serviceAccount, firewall,
+                networkInterface, subNetwork, mig, cloudDns, dbInstance, loadBalancing);
     }
+
 }

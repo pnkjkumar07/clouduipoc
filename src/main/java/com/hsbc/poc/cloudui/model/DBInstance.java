@@ -35,15 +35,24 @@ public class DBInstance implements Serializable {
         this.sqluserpassword = sqluserpassword;
     }
 
+    public DBInstance(String dbinstancename, String dbversion, String tier){
+        this.dbinstancename = dbinstancename;
+        this.dbversion = dbversion;
+        this.tier = tier;
+    }
     @Override
     public String toString() {
         return "\r\n # Create a SQL Database and DB instance" +
                 "\r\n resource \"google_sql_database_instance\" \"db_instance\" {" +
-                "\r\n name = \"" + dbinstancename + "\"" +
+                //TODO
+                "\r\n name = \"" + "postgresmaster17" + "\"" + //postgresmaster13 dbinstancename
                 "\r\n database_version = \"" + dbversion + "\" \r\n " +
+                "\r\n timeouts { \r\n create = \"15m\" \r\n delete = \"15m\" \r\n }"  +
                 "\r\n settings { \r\n tier = \"" + tier + "\" \r\n }" +
-                "\r\n  deletion_protection = \"" + deletion_protection + "\" \r\n }" +
+                "\r\n deletion_protection = \"" + deletion_protection + "\" \r\n }" +
+                //"\r\n timeouts { \r\n create =  = \"15m\" \r\n delete = \"15m\" \r\n }"  +
                 "\r\n resource \"google_sql_database\" \"database\" { \r\n name = \"" + sqldbname + "\"" +
+                "\r\n timeouts { \r\n create = \"15m\" \r\n delete = \"15m\" \r\n }"  +
                 "\r\n instance=" + sqldbinstance + "\r\n }" +
                 "\r\n resource \"random_password\" \"password\" { \r\n length = " + passwordlength +
                 "\r\n special = " + passwordspecial +

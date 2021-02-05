@@ -26,6 +26,7 @@ public class ComputeVM implements Serializable{
     private String[] scopes;
     private Mig mig;
     private DBInstance dbInstance;
+    private LoadBalancing loadBalancing;
 
     public String getEmail() {
         return email;
@@ -62,7 +63,7 @@ public class ComputeVM implements Serializable{
     public ComputeVM(String name, String zone, String machine_type, String source, String networkInt, String email, String[] scopes, String allow_stopping_for_update,
                      String tags, CloudDns cloudDns, BootDisk bootDisk, ServiceAccount serviceAccount,
                      NetworkInterface networkInterface, Firewall firewall, PersistentDisk persistentDisk,
-                     SubNetwork subNetwork, Provider provider, Mig mig, DBInstance dbInstance) {
+                     SubNetwork subNetwork, Provider provider, Mig mig, DBInstance dbInstance, LoadBalancing loadBalancing) {
         this.name = name;
         this.zone = zone;
         this.machine_type = machine_type;
@@ -82,6 +83,7 @@ public class ComputeVM implements Serializable{
         this.provider = provider;
         this.mig = mig;
         this.dbInstance = dbInstance;
+        this.loadBalancing = loadBalancing;
     }
 
     public ComputeVM(String name, String zone, String machine_type, String allow_stopping_for_update,
@@ -229,6 +231,9 @@ public class ComputeVM implements Serializable{
         }
         if(null != dbInstance){
             sb.append(dbInstance);
+        }
+        if(null != loadBalancing){
+            sb.append(loadBalancing);
         }
         return sb.toString();
     }

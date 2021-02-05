@@ -77,8 +77,8 @@ public class Firewall implements Serializable {
                 "\r\n name = \"" + name +"\"" +
                 "\r\n network = google_compute_network.cloud_ui_poc_network.name" +
                 "\r\n source_tags = [\"" + source_tags +"\"]" +
-                //"\r\n allow { \r\n protocol =  \""  + protocol1 +"\" \r\n }" +
-                "\r\n allow { \r\n protocol =  \""  + protocol +"\" \r\n  ports = "+ ports + "\r\n }" +
+                "\r\n allow { \r\n protocol =  \""  + protocol +"\" \r\n }" +
+                "\r\n allow { \r\n protocol =  \""  + "tcp" +"\" \r\n  ports = ["+ "\"80\", \"8080\", \"1000-2000\"" + "]\r\n }" +
                 "\r\n }";
     }
 }

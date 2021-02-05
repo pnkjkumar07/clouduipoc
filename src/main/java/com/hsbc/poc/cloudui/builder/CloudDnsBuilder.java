@@ -7,7 +7,7 @@ public class CloudDnsBuilder {
     private String name;
     private String managed_zone;
     private String type;
-    private String[] rrdatas;
+    private String rrdatas;
     private String ttl;
     private String managed_name;
     private String managed_dns_name;
@@ -46,7 +46,7 @@ public class CloudDnsBuilder {
         return this;
     }
 
-    public CloudDnsBuilder setRrdatas(String[] rrdatas) {
+    public CloudDnsBuilder setRrdatas(String rrdatas) {
         this.rrdatas = rrdatas;
         return this;
     }
