@@ -1,0 +1,1 @@
+{full_url='http://34.71.130.176:8080/job/testFolder/job/webhook-pipeline1/142/', number=142, queue_id=371, timestamp=1612933213870, phase='COMPLETED', status='SUCCESS', url='job/testFolder/job/webhook-pipeline1/142/', scm={changes=[], culprits=[]}, parameters={tF_PATH='/home/mgmtbld/demo_03/demo/scenario_02'}, log='', notes='', artifacts={}}

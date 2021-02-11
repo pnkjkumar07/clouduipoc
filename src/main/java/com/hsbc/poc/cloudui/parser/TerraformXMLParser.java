@@ -57,11 +57,11 @@ public class TerraformXMLParser {
         parseGenerateTF(xmlfilename);
     }
 
-    public static String parseGenerateTF(String xmlfilename) throws Exception {
+    public static String parseGenerateTF(String xmlfilenames) throws Exception {
 
-        System.out.println("Parsing xml file:- "+ xmlfilename);
+        System.out.println("Parsing xml file name:- "+xmlfilenames);
 
-        File inputFile = new File(xmlfilename);
+        File inputFile = new File(xmlfilenames);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
@@ -73,10 +73,13 @@ public class TerraformXMLParser {
 
         XPath xPath =  XPathFactory.newInstance().newXPath();
 
-        String expression = "/mxfile/diagram/mxGraphModel/root/object";
+        //String expression = "/mxfile/diagram/mxGraphModel/root/object";
+        String expression = "/mxGraphModel/root/object";
 
         NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(
                 doc, XPathConstants.NODESET);
+
+        System.out.println("nodelist length= "+nodeList.getLength());
 
         for (int i = 0; i < nodeList.getLength(); i++) {
 
@@ -85,7 +88,7 @@ public class TerraformXMLParser {
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
                 String elementName = eElement.getAttribute("label");
-                //System.out.println("Elements name:- "+elementName);
+                System.out.println("Elements name:- "+elementName);
                 if(elementName.equalsIgnoreCase("Compute\n" +
                         "Engine")){
                     String computeEngineName = eElement.getAttribute("Name");

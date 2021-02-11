@@ -3,6 +3,7 @@ package com.hsbc.poc.cloudui.util;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 
@@ -12,12 +13,17 @@ import java.io.File;
 * */
 public class PushToGit {
 
+    @Autowired
+    private static ConfigUtility configUtil;
+
     public static void pushToRepo() {
         try {
 
-            String localPath = "C:\\develpment\\hsbc\\git\\HiteshUIRepo"; //working pankaj
+            //String localPath = "C:\\develpment\\hsbc\\git\\HiteshUIRepo"; //working pankaj
             //String localPath = "D:\\CloudUI_HiteshRepo"; //working prarthana
-            Git git = Git.open(new File(localPath));
+
+            String gitlocalPath = configUtil.getProperty("git_local_path");//"D:\\platformui";  //hitesh
+            Git git = Git.open(new File(gitlocalPath));
 
             // Stage all files in the repo including new files
             git.add().addFilepattern(".").call();
@@ -31,13 +37,14 @@ public class PushToGit {
             RemoteAddCommand remoteAddCommand = git.remoteAdd();
             remoteAddCommand.setName("origin");
             //remoteAddCommand.setUri(new URIish("https://github.com/pnkjkumar07/uicloudtf.git")); //working
-            remoteAddCommand.setUri(new URIish("https://github.com/hiteshcloudwork/platformui.git")); //checking
+            //remoteAddCommand.setUri(new URIish("https://github.com/hiteshcloudwork/platformui.git")); //checking
+            remoteAddCommand.setUri(new URIish(configUtil.getProperty("git_remote_url"))); //checking
             remoteAddCommand.call();
 
             // push to remote:
             PushCommand pushCommand = git.push();
            // pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("pnkjkumar07", "A$tomate1")); //working
-            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("hiteshcloudwork", "hiteshjaincloud")); //checking
+            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(configUtil.getProperty("git_username"), configUtil.getProperty("git_password"))); //checking
             pushCommand.call();
         } catch (Exception e) {
             e.printStackTrace();

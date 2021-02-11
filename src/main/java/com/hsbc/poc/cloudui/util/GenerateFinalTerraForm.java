@@ -2,18 +2,23 @@ package com.hsbc.poc.cloudui.util;
 
 import com.hsbc.poc.cloudui.builder.*;
 import com.hsbc.poc.cloudui.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class GenerateFinalTerraForm {
 
-    private static String filePath = "C:\\develpment\\hsbc\\git\\HiteshUIRepo\\demo\\scenario_02\\";
+    //private static String filePath = "C:\\develpment\\hsbc\\git\\HiteshUIRepo\\demo\\scenario_02\\";
+    //private static String filePath = git_main_tf_filepath//"D:\\platformui\\demo\\scenario_02\\"; //hitesh
+
+    @Autowired
+    private static ConfigUtility configUtil;
 
     public static void writeToTempFile(String fileName, Object computeVM) throws Exception{
 
+        String filePath = configUtil.getProperty("git_main_tf_filepath");
         FileOutputStream fout = new FileOutputStream(new File((filePath+fileName)));
         ObjectOutputStream oos = new ObjectOutputStream(fout);
         oos.writeObject(computeVM);
@@ -120,7 +125,7 @@ public class GenerateFinalTerraForm {
                 .createComputeVM();
 
         //writting main.tf file
-        writeToTempFile("main.tf",computeVM.toString());
+        writeToTempFile("main1.tf",computeVM.toString());
 
         return computeVM.toString();
        // writeToTempFile("main.tf",computeVM.toString());
@@ -135,6 +140,11 @@ public class GenerateFinalTerraForm {
         String mig_scopes = "storage-rw";
         String mig_tags = "sample";
         String rrdatas = "8.8.8.8";
+        System.out.println("check null");
+
+        if(compute==null){
+            System.out.println("compute is null");
+        }
         final ComputeVM computeVM = new ComputeVMBuilder().setName(compute.getName()).setZone(compute.getZone())
                 .setMachine_type(compute.getMachine_type()).setSource(compute.getSource())
                 .setNetworkInt(compute.getNetworkInt())
@@ -173,7 +183,6 @@ public class GenerateFinalTerraForm {
                         .setHealthcheckintervalsec(loadBalancing.getHealthcheckintervalsec()).setHealthchecktimeoutsec(loadBalancing.getHealthchecktimeoutsec())
                         .setHealthcheckregion(loadBalancing.getHealthcheckregion())
                         .createLoadBalancing())
-
                 .createComputeVM();
 
         //writting main.tf file

@@ -231,18 +231,6 @@ public class Mig implements Serializable {
                 "\r\n boot = " + boot + "\r\n }"+
                 "\r\n service_account { \r\n email = " + email +
                 "\r\n scopes = [\"" + scopes + "\"] \r\n }"+
-                "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n } \r\n  }" +
-                /*"\r\n resource \"google_compute_region_instance_group_manager\" \"cloud_ui_poc_mig\" { " +
-                "\r\n name = " + mig_name +
-                "\r\n region = \"" + region + "\"" +
-                "\r\n base_instance_name = \"" + base_instance_name + "\"" +
-                "\r\n target_size = " + target_size +
-                "\r\n wait_for_instances = " + wait_for_instances +
-                "\r\n distribution_policy_zones = " + Arrays.toString(distribution_policy_zones) +
-                "\r\n version { " +
-                "\r\n name = \"" + version_name + "\"" +
-                "\r\n instance_template = " + instance_template + "\r\n }" +
-                "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n }" +*/
-                "\r\n }";
+                "\r\n lifecycle { \r\n create_before_destroy = " + create_before_destroy + "\r\n } \r\n  }" ;
     }
 }

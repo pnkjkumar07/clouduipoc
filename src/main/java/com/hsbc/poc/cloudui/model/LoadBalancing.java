@@ -1,6 +1,8 @@
 package com.hsbc.poc.cloudui.model;
 
-public class LoadBalancing {
+import java.io.Serializable;
+
+public class LoadBalancing implements Serializable {
 
     private String ruleProvider;
     private String ruleName;

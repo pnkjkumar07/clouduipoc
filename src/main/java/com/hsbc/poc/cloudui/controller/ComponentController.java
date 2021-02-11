@@ -3,8 +3,12 @@ package com.hsbc.poc.cloudui.controller;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.hsbc.poc.cloudui.parser.TerraformXMLParser;
+import com.hsbc.poc.cloudui.util.ConfigUtility;
 import com.hsbc.poc.cloudui.util.PushToGit;
+import com.hsbc.poc.cloudui.util.jenkinsobj.Build;
+import com.hsbc.poc.cloudui.util.jenkinsobj.JenkinsResponse;
 import com.hsbc.poc.cloudui.util.xmlobj.Mxfile;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -20,17 +24,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-
-import static com.google.gson.stream.JsonReader.*;
-
-//@CrossOrigin(origins = "http://localhost:8080/")
-//@CrossOrigin("*")
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
 public class ComponentController {
@@ -41,6 +35,10 @@ public class ComponentController {
     private File file;
     private Resource resource;
     byte[] content;
+    private Build build;
+
+    @Autowired
+    private ConfigUtility configUtil;
 
     @PostConstruct
     public void init() {
@@ -87,7 +85,6 @@ public class ComponentController {
         return new ResponseEntity<>(loadJson(fileName), HttpStatus.OK);
     }
 
-
     @PostMapping(value = "/readxml",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = "text/plain"
@@ -96,69 +93,74 @@ public class ComponentController {
             throws ConfigDataResourceNotFoundException {
 
         System.out.println("Got xmldata from browser :- "+ xmldata);
-        String outputFilePath = "C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\xmlfile.xml"; //pankaj
-        //String outputFilePath = "D:\\XML_CloudUI"; //prarthana
+        String outputFilePath = configUtil.getProperty("xml_output_file_path");//"D:\\xmldata\\xmlfile.xml"; //hitesh
 
         String tfcontent = null;
-        tfcontent = storeXML(xmldata, tfcontent, outputFilePath);
+        tfcontent = storeXML(xmldata, tfcontent, outputFilePath, true);
 
-        return ResponseEntity.ok().body(tfcontent);
+        return new ResponseEntity<>(tfcontent, HttpStatus.OK);
     }
 
-    public String storeXML(String xmldata, String tfcontent, String outputFilePath) {
+    public String storeXML(String xmldata, String content, String outputFilePath, boolean isParsing) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath));
             writer.write(xmldata);
             writer.close();
-
-            tfcontent = TerraformXMLParser.parseGenerateTF(outputFilePath);
+            if(isParsing) {
+                content = TerraformXMLParser.parseGenerateTF(outputFilePath);
+            }
 
         } catch (Exception  e) {
             e.printStackTrace();
 
         }
-        return tfcontent;
+        return content;
     }
 
 
-    // @PostMapping(path = "/preview", consumes = MediaType.ALL_VALUE , produces = MediaType.ALL_VALUE)
-   @GetMapping(path="/preview")
-    public ResponseEntity<Object> previewXML(@RequestBody Mxfile mxfile){
+    @PostMapping(value = "/jenkinsrequest",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = "text/plain"
+    )
+    public ResponseEntity<String> jenkinsResponse(@RequestBody String xmldata)
+            throws ConfigDataResourceNotFoundException {
 
-        return new ResponseEntity<>(mxfile.getDiagram().getMxGraphModel().getRoot().getObject().get(0),HttpStatus.OK);
-        /*ResponseEntity<Object> response = null;
+        System.out.println("Got Jenkins xmldata from browser :- "+ xmldata);
+        String outputFilePath = configUtil.getProperty("jenkins_response_file_path"); //"D:\\xmldata\\xmlfile.xml"; //hitesh
+        String content = null;
+        content = storeXML(xmldata, content, outputFilePath, false);
+        return new ResponseEntity<>(content, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/jenkins",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<Build> jenkins(@RequestBody JenkinsResponse response)
+    throws ConfigDataResourceNotFoundException {
+
+        System.out.println("jenkins status = "+response.getBuild().getStatus() +"\r\n Jenkins phase = "
+                + response.getBuild().getPhase());
+        build = response.getBuild();
         try {
-           response = ResponseEntity.status(HttpStatus.OK).body(mxfile.getDiagram().getMxGraphModel().getRoot().getObject());
-        } catch (Exception e) {
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\jenkinsresponse.json"));
+            writer.write(response.getBuild().toString());
+            writer.close();
+        }catch (Exception ex){
+
         }
-        return response;*/
-    }
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public List sayHello() {
-        return Arrays.asList("A", "B", "C");
+
+        return new ResponseEntity<>(response.getBuild(), HttpStatus.OK);
     }
 
-    //TODO
-    //@GetMapping(path="/preview", produces= MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getPreview(){
-        try {
-            fileName = "file:C:\\develpment\\hsbc\\previewpretty.json";
-            JsonParser parser = new JsonParser();
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create(); //new Gson();
-            resource = resolver.getResource(fileName);
-            file = resource.getFile();
-            String content = Files.readAllBytes(file.toPath()).toString();
-            String content1 = gson.fromJson(content, String.class);
-            System.out.println(content1);
-        } catch(Exception exception){
-            exception.printStackTrace();
+    @GetMapping(path="/jenkinsstatus", produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getJenkinsStatus(){
+        //fileName = "file:C:\\develpment\\hsbc\\poc\\cloudui\\src\\main\\resources\\xml\\jenkinsresponse.json";
+        //return new ResponseEntity<>(loadJson(fileName), HttpStatus.OK);
+        if(null == build){
+            return new ResponseEntity<>("Please check if Jenkins Pipeline is Triggered/Running/Finished.", HttpStatus.OK);
         }
-        return new ResponseEntity<>(loadJson(fileName), HttpStatus.OK);
+        return new ResponseEntity<>(build, HttpStatus.OK);
     }
-
 
     private byte[] loadJson(String fileName) {
         try {

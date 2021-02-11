@@ -45,7 +45,7 @@ public class DBInstance implements Serializable {
         return "\r\n # Create a SQL Database and DB instance" +
                 "\r\n resource \"google_sql_database_instance\" \"db_instance\" {" +
                 //TODO
-                "\r\n name = \"" + "postgresmaster17" + "\"" + //postgresmaster13 dbinstancename
+                "\r\n name = \"" + dbinstancename + "\"" + //postgresmaster13 dbinstancename
                 "\r\n database_version = \"" + dbversion + "\" \r\n " +
                 "\r\n timeouts { \r\n create = \"15m\" \r\n delete = \"15m\" \r\n }"  +
                 "\r\n settings { \r\n tier = \"" + tier + "\" \r\n }" +

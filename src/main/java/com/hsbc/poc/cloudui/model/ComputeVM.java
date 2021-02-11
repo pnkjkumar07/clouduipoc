@@ -205,6 +205,11 @@ public class ComputeVM implements Serializable{
                 "\r\n scopes = " + Arrays.toString(scopes) + "\r\n }"
                 );
                 sb.append("\r\n}");
+        sb.append("\r\n ## Configure the Google Cloud Provider" +
+                "\r\n provider \"google\" {\n" +
+                "\r\n project = \"direct-blend-298007\"\n" +
+                "\r\n region = \"us-central1\"\n" +
+                "\r\n }");
         if(null != cloudDns){
             sb.append(cloudDns);
         }
@@ -235,6 +240,7 @@ public class ComputeVM implements Serializable{
         if(null != loadBalancing){
             sb.append(loadBalancing);
         }
+
         return sb.toString();
     }
 }
