@@ -16,15 +16,23 @@ public class GenerateFinalTerraForm {
     @Autowired
     private static ConfigUtility configUtil;
 
-    public static void writeToTempFile(String fileName, Object computeVM) throws Exception{
+    public static void writeToTempFile( Object computeVM) throws Exception{
+        String filePath = null;
+        System.out.println("configUtil = "+configUtil);
+        if(null == configUtil){
+            filePath = "/home/hitesh_cloudwork/decoder/servicelayer/repo/platformui/demo/scenario_02/main.tf";
+        }
+        else {
+            filePath = configUtil.getProperty("git_main_tf_filepath");
+        }
 
-        String filePath = configUtil.getProperty("git_main_tf_filepath");
-        FileOutputStream fout = new FileOutputStream(new File((filePath+fileName)));
+        System.out.println("FilePath to write main.tf= "+filePath);
+        FileOutputStream fout = new FileOutputStream(new File((filePath)));
         ObjectOutputStream oos = new ObjectOutputStream(fout);
         oos.writeObject(computeVM);
         oos.close();
         fout.close();
-        System.out.println("Writting tf file path:- "+filePath+fileName);
+        System.out.println("Writting tf file path:- "+filePath);
         System.out.println(computeVM);
 
     }
@@ -125,7 +133,7 @@ public class GenerateFinalTerraForm {
                 .createComputeVM();
 
         //writting main.tf file
-        writeToTempFile("main1.tf",computeVM.toString());
+        //writeToTempFile("main1.tf",computeVM.toString());
 
         return computeVM.toString();
        // writeToTempFile("main.tf",computeVM.toString());
@@ -186,7 +194,7 @@ public class GenerateFinalTerraForm {
                 .createComputeVM();
 
         //writting main.tf file
-        writeToTempFile("main.tf",computeVM.toString());
+        writeToTempFile(computeVM.toString());
 
         return computeVM.toString();
     }
